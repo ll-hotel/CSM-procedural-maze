@@ -1,50 +1,66 @@
-NAME	= maze
+CXX = g++
 
-SOURCE_DIR	=	src/
-SOURCES		=	$(addprefix $(SOURCE_DIR), \
-					app_cleanup.c \
-					app_execute.c \
-					app_init.c \
-					app_loop.c \
-					app_log.c \
-					app_on_event.c \
-					app_render.c \
-					main.c \
-				)
-OBJECT_DIR	=	obj/
-OBJECTS		=	$(patsubst $(SOURCE_DIR)%.c,$(OBJECT_DIR)%.o, $(SOURCES))
+SRC_DIR = src/
+INC_DIR = include/
+OBJ_DIR = .obj/
 
-CFLAGS		:=	-Wall -Wextra -Werror
-IFLAGS		:=	-Iinclude
-LFLAGS		:=	-lSDL2
+CXXFLAGS = -Wall -Wextra -Werror
+IFLAGS = -I${INC_DIR} -I${SDL_DIR}include/
+DFLAGS = -MMD -MP
+LFLAGS = -lSDL2
 
+ifneq ("${DEBUG}", "")
+	CFLAGS += ${DEBUG}
+endif
 
+OBJS = $(patsubst %.cpp,${OBJ_DIR}%.o,\
+	   app.cpp \
+	   main.cpp \
+	   )
+DEPS = $(OBJS:.o=.d)
+
+NAME = maze
+
+.SILENT: all
+.PHONY: all
 all:
-	@echo 'Choose your OS:'
-	@echo ' - windows'
-	@echo ' - linux'
+	echo 'Choose your OS:'
+	echo ' - windows'
+	echo ' - linux'
 
-windows: $(NAME).exe
+-include ${DEPS}
 
-linux: $(NAME)
+.PHONY: windows
+windows: ${NAME}.exe
 
-$(NAME).exe: $(SOURCES)
-	gcc $(CFLAGS) $(IFLAGS) -o $@ $(SOURCES) $(LFLAGS)
+.PHONY: linux
+linux: ${NAME}
 
-$(NAME): $(OBJECTS)
-	gcc $(CFLAGS) $(IFLAGS) -o $@ $(OBJECTS) $(LFLAGS)
+${NAME}.exe: ${OBJS}
+	${CXX} ${CXXFLAGS} ${IFLAGS} ${DFLAGS} -o $@ ${OBJS} ${LFLAGS}
 
-$(OBJECT_DIR)%.o:	$(SOURCE_DIR)%.c | $(OBJECT_DIR)
-	gcc $(CFLAGS) $(IFLAGS) -o $@ -c $<
+${NAME}: ${OBJS}
+	${CXX} ${CXXFLAGS} ${IFLAGS} ${DFLAGS} -o $@ ${OBJS} ${LFLAGS}
 
-$(OBJECT_DIR):
-	mkdir $@
+${OBJ_DIR}%.o: ${SRC_DIR}%.cpp | ${OBJ_DIR}
+	${CXX} ${CXXFLAGS} ${IFLAGS} ${DFLAGS} -o $@ -c $<
 
+${OBJ_DIR}:
+	mkdir -p $(sort $(dir ${OBJS}))
+
+.PHONY: clean
 clean:
-	rm -rf $(OBJECT_DIR)
+	rm -rf ${OBJ_DIR}
 
-fclean:	clean
-	rm -f $(NAME) $(NAME).exe
+.PHONY: fclean
+fclean: clean
+ifneq ("$(wildcard ${NAME}.exe)","")
+	rm ${NAME}.exe
+endif
+ifneq ("$(wildcard ${NAME})","")
+	rm ${NAME}
+endif
 
-re:	fclean
-	@make --no-print-directory all
+.SILENT: re
+.PHONY: re
+re: fclean all
