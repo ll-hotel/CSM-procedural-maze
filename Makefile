@@ -6,7 +6,7 @@ SRC_DIR = src
 INC_DIR = include
 OBJ_DIR = .obj
 
-CXXFLAGS = -Wall -Wextra -Werror
+CXXFLAGS = -Wall -Wextra -Werror -std=gnu++11
 IFLAGS = -I${INC_DIR}
 DFLAGS = -MMD -MP
 LFLAGS = -lSDL2
@@ -16,8 +16,9 @@ ifneq ("${DEBUG}", "")
 endif
 
 OBJS = $(patsubst %.cpp,${OBJ_DIR}/%.o,\
-	   app.cpp \
 	   main.cpp \
+	   Maze.cpp \
+	   Sdl.cpp \
 	   )
 DEPS = $(OBJS:.o=.d)
 

@@ -1,10 +1,11 @@
-#include "app.hpp"
+#include "Maze.hpp"
 
-int	main(void)
+int
+main(void)
 {
-	App	app;
+	Maze	maze{};
 
-	app.execute();
-	app.cleanup();
-	return (0);
+	if (!maze.run())
+		return 1;
+	return 0;
 }
