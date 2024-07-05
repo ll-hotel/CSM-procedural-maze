@@ -16,6 +16,10 @@ public:
 	int set_color(u_char r, u_char g, u_char b, u_char a);
 	int draw_point(int x, int y);
 	int draw_line(int x0, int y0, int x1, int y1);
+	int draw_rect(int x, int y, int h, int w);
+	int draw_rect(const SDL_Rect &rect);
+	int fill_rect(int x, int y, int h, int w);
+	int fill_rect(const SDL_Rect &rect);
 
 	void render(void);
 	int clear(void);

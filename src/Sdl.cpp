@@ -103,3 +103,39 @@ Sdl::draw_line(int x0, int y0, int x1, int y1)
 {
 	return SDL_RenderDrawLine(this->renderer, x0, y0, x1, y1);
 }
+
+int
+Sdl::draw_rect(int x, int y, int h, int w)
+{
+	SDL_Rect r;
+
+	r.x = x;
+	r.y = y;
+	r.w = w;
+	r.h = h;
+	return SDL_RenderDrawRect(this->renderer, &r);
+}
+
+int
+Sdl::draw_rect(const SDL_Rect &rect)
+{
+	return SDL_RenderDrawRect(this->renderer, &rect);
+}
+
+int
+Sdl::fill_rect(int x, int y, int h, int w)
+{
+	SDL_Rect r;
+
+	r.x = x;
+	r.y = y;
+	r.w = w;
+	r.h = h;
+	return SDL_RenderFillRect(this->renderer, &r);
+}
+
+int
+Sdl::fill_rect(const SDL_Rect &rect)
+{
+	return SDL_RenderFillRect(this->renderer, &rect);
+}

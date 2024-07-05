@@ -24,7 +24,12 @@ Maze::run(void)
 
 	while (this->running)
 	{
+		this->sdl.set_color(255, 255, 255, 255);
+		this->sdl.fill_rect(100, 100, 100, 100);
+
 		this->sdl.render();
+		this->sdl.set_color(0, 0, 0, 255);
+		this->sdl.clear();
 		SDL_Delay(10); // 100 fps (10ms = 1s/100)
 
 		this->handle_events();
