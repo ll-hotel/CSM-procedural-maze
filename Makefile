@@ -1,48 +1,43 @@
+UNAME = $(shell uname)
+
 CXX = g++
 
-SRC_DIR = src/
-INC_DIR = include/
-OBJ_DIR = .obj/
+SRC_DIR = src
+INC_DIR = include
+OBJ_DIR = .obj
 
-CXXFLAGS = -Wall -Wextra -Werror
-IFLAGS = -I${INC_DIR} -I${SDL_DIR}include/
+CXXFLAGS = -Wall -Wextra -Werror -std=gnu++11
+IFLAGS = -I${INC_DIR}
 DFLAGS = -MMD -MP
 LFLAGS = -lSDL2
 
 ifneq ("${DEBUG}", "")
-	CFLAGS += ${DEBUG}
+	CXXFLAGS += ${DEBUG}
 endif
 
-OBJS = $(patsubst %.cpp,${OBJ_DIR}%.o,\
-	   app.cpp \
+OBJS = $(patsubst %.cpp,${OBJ_DIR}/%.o,\
 	   main.cpp \
+	   Maze.cpp \
+	   Sdl.cpp \
 	   )
 DEPS = $(OBJS:.o=.d)
 
 NAME = maze
+ifeq (${UNAME}, MS-Windows)
+	NAME = maze.exe
+endif
 
 .SILENT: all
 .PHONY: all
-all:
-	echo 'Choose your OS:'
-	echo ' - windows'
-	echo ' - linux'
+
+all: ${NAME}
 
 -include ${DEPS}
-
-.PHONY: windows
-windows: ${NAME}.exe
-
-.PHONY: linux
-linux: ${NAME}
-
-${NAME}.exe: ${OBJS}
-	${CXX} ${CXXFLAGS} ${IFLAGS} ${DFLAGS} -o $@ ${OBJS} ${LFLAGS}
 
 ${NAME}: ${OBJS}
 	${CXX} ${CXXFLAGS} ${IFLAGS} ${DFLAGS} -o $@ ${OBJS} ${LFLAGS}
 
-${OBJ_DIR}%.o: ${SRC_DIR}%.cpp | ${OBJ_DIR}
+${OBJ_DIR}/%.o: ${SRC_DIR}/%.cpp | ${OBJ_DIR}
 	${CXX} ${CXXFLAGS} ${IFLAGS} ${DFLAGS} -o $@ -c $<
 
 ${OBJ_DIR}:
@@ -54,13 +49,9 @@ clean:
 
 .PHONY: fclean
 fclean: clean
-ifneq ("$(wildcard ${NAME}.exe)","")
-	rm ${NAME}.exe
-endif
-ifneq ("$(wildcard ${NAME})","")
-	rm ${NAME}
-endif
+	rm -f ${NAME}
 
 .SILENT: re
 .PHONY: re
-re: fclean all
+re: fclean
+	make --no-print-directory
