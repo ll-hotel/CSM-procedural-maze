@@ -4,13 +4,13 @@
 #include <SDL2/SDL_video.h>
 #include <iostream>
 
-Sdl::Sdl(void)
+Sdl::Sdl(void): window(NULL), renderer(NULL)
 {
 	this->width = 1080;
 	this->height = 720;
 }
 
-Sdl::Sdl(const Sdl &sdl)
+Sdl::Sdl(const Sdl &sdl): window(NULL), renderer(NULL)
 {
 	this->width = sdl.width;
 	this->height = sdl.height;
@@ -76,7 +76,7 @@ Sdl::quit(void)
 }
 
 int
-Sdl::set_color(u_char r, u_char g, u_char b, u_char a)
+Sdl::set_colour(u_char r, u_char g, u_char b, u_char a)
 {
 	return SDL_SetRenderDrawColor(this->renderer, r, g, b, a);
 }

@@ -19,6 +19,8 @@ OBJS = $(patsubst %.cpp,${OBJ_DIR}/%.o,\
 	   main.cpp \
 	   Maze.cpp \
 	   Sdl.cpp \
+	   Png.cpp \
+	   PngChunk.cpp \
 	   )
 DEPS = $(OBJS:.o=.d)
 
